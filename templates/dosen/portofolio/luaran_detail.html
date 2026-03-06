@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h4 class="mb-1">{{ object.judul }}</h4>
+    <div class="text-muted">{{ object.kelas }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{% url 'dosen:luaran_list' %}">Kembali</a>
+
+    {% if IS_MAHASISWA %}
+      <a class="btn btn-primary" href="{% url 'dosen:submission_submit' object.pk %}">
+        <i class="bi bi-cloud-upload me-1"></i>Upload Submission
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Deskripsi</div>
+      <div class="text-muted small mb-2">Deadline: {% if object.deadline %}{{ object.deadline|date:"d M Y H:i" }}{% else %}-{% endif %}</div>
+      <div>{{ object.deskripsi|linebreaks|default:"-" }}</div>
+      <div class="text-muted small mt-2">Ekstensi: {{ object.allowed_ext }}</div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Submission</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Mahasiswa</th><th>Status</th><th>Waktu</th><th></th></tr></thead>
+          <tbody>
+            {% for s in object.submissions.all %}
+              {% if not IS_MAHASISWA or s.mahasiswa.pk == user.profil_mahasiswa.pk %}
+              <tr>
+                <td>
+                  {{ s.mahasiswa.nama }}
+                  <div class="text-muted small">{{ s.mahasiswa.nim }}</div>
+                </td>
+                <td><span class="badge bg-secondary">{{ s.get_status_display }}</span></td>
+                <td class="text-muted small">{{ s.created_at|date:"d M Y H:i" }}</td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-secondary" href="{% url 'dosen:submission_detail' s.pk %}">Buka</a>
+                </td>
+              </tr>
+              {% endif %}
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted p-4">Belum ada submission.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if IS_MAHASISWA %}
+        <div class="text-muted small mt-2">
+          Anda hanya dapat melihat submission milik Anda sendiri.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

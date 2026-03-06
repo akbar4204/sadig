@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h4 class="mb-1">Upload Submission</h4>
+  <div class="text-muted mb-3">{{ luaran.judul }} • {{ luaran.kelas }}</div>
+  {% if existing %}
+    <div class="alert alert-info">Anda sudah pernah mengunggah. Mengunggah ulang akan <b>menimpa</b> submission sebelumnya.</div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Upload</button>
+      <a class="btn btn-outline-secondary" href="{% url 'dosen:luaran_detail' luaran.pk %}">Kembali</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

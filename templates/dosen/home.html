@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h3 class="mb-2">Dosen Digital</h3>
+      <p class="text-muted mb-4">
+        Platform terpadu untuk <b>Log Bimbingan</b>, <b>Portofolio Tugas</b>, dan <b>Dokumen Akreditasi Tri Dharma</b>.
+      </p>
+      <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
+        <a class="btn btn-outline-secondary" href="/admin/" target="_blank">Admin</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

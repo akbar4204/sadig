@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4 class="mb-0">Kelas Kuliah</h4>
+    <div class="text-muted">Pengampu, tahun ajaran, dan kelas.</div>
+  </div>
+
+  {% if IS_OPERATOR %}
+    <a class="btn btn-primary" href="{% url 'dosen:kelas_create' %}">
+      <i class="bi bi-plus-lg me-1"></i>Tambah
+    </a>
+  {% endif %}
+</div>
+
+<form class="mb-3" method="get">
+  <div class="input-group">
+    <input class="form-control" name="q" value="{{ q }}" placeholder="Cari mata kuliah/tahun ajaran/kelas...">
+    <button class="btn btn-outline-secondary" type="submit">Cari</button>
+  </div>
+</form>
+
+<div class="card p-0">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Mata Kuliah</th><th>Tahun Ajaran</th><th>Kelas</th><th>Dosen Pengampu</th></tr></thead>
+      <tbody>
+        {% for x in object_list %}
+        <tr>
+          <td>{{ x.mata_kuliah }}</td>
+          <td>{{ x.tahun_ajaran }}</td>
+          <td class="fw-semibold">{{ x.nama_kelas }}</td>
+          <td class="text-muted small">
+            {% for d in x.dosen_pengampu.all %}{{ d.nama }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted p-4">Belum ada data.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

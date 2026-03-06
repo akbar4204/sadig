@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h4 class="mb-1">Review Pengajuan Bimbingan</h4>
+  <div class="text-muted mb-3">{{ obj.mahasiswa.nama }} • {{ obj.get_jenis_display }}</div>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Simpan Review</button>
+      <a class="btn btn-outline-secondary" href="{% url 'dosen:bimbingan_detail' obj.pk %}">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

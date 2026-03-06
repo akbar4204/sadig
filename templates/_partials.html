@@ -1,0 +1,26 @@
+{# templates/_partials.html #}
+{# Komponen badge status (Django Templates). #}
+
+{% with s=status|default:"" %}
+  {% if s == "approved" or s == "verified" %}
+    <span class="badge bg-success">{{ label|default:status }}</span>
+
+  {% elif s == "submitted" %}
+    <span class="badge bg-primary">{{ label|default:status }}</span>
+
+  {% elif s == "draft" %}
+    <span class="badge bg-secondary">{{ label|default:status }}</span>
+
+  {% elif s == "revision" %}
+    <span class="badge bg-warning text-dark">{{ label|default:status }}</span>
+
+  {% elif s == "rejected" or s == "canceled" %}
+    <span class="badge bg-danger">{{ label|default:status }}</span>
+
+  {% elif s == "done" %}
+    <span class="badge bg-dark">{{ label|default:status }}</span>
+
+  {% else %}
+    <span class="badge bg-secondary">{{ label|default:status }}</span>
+  {% endif %}
+{% endwith %}

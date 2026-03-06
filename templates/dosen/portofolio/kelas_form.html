@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h4 class="mb-2">Tambah Kelas Kuliah</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Simpan</button>
+      <a class="btn btn-outline-secondary" href="{% url 'dosen:kelas_list' %}">Kembali</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

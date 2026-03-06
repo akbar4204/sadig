@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h4 class="mb-0">Dashboard</h4>
+    <div class="text-muted">Ringkasan aktivitas & dokumen.</div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card p-3 h-100">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="text-muted small">Pengajuan Bimbingan</div>
+          <div class="fs-3 fw-semibold">{{ count_pengajuan }}</div>
+        </div>
+        <div class="text-end">
+          <span class="badge badge-theme">Open: {{ count_pengajuan_open }}</span>
+        </div>
+      </div>
+      <a class="stretched-link" href="{% url 'dosen:bimbingan_list' %}"></a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 h-100">
+      <div class="text-muted small">Portofolio: Luaran</div>
+      <div class="fs-3 fw-semibold">{{ count_luaran }}</div>
+      <div class="text-muted small">Submission: {{ count_submission }}</div>
+      <a class="stretched-link" href="{% url 'dosen:luaran_list' %}"></a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-3 h-100">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="text-muted small">Dokumen Akreditasi</div>
+          <div class="fs-3 fw-semibold">{{ count_akreditasi }}</div>
+        </div>
+        <div class="text-end">
+          <span class="badge bg-secondary">Diajukan: {{ count_akreditasi_submitted }}</span>
+        </div>
+      </div>
+      <a class="stretched-link" href="{% url 'dosen:akreditasi_list' %}"></a>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <div>
+        <div class="fw-semibold">Grafik Ringkasan</div>
+        <div class="text-muted small">Visualisasi data saat halaman dibuka.</div>
+      </div>
+    </div>
+
+    <div style="height: 320px;">
+      <canvas id="chartSummary"></canvas>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row g-3">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="fw-semibold mb-2">Pengajuan Bimbingan: Open vs Lainnya</div>
+            <div style="height: 240px;">
+              <canvas id="chartPengajuan"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="fw-semibold mb-2">Akreditasi: Diajukan vs Lainnya</div>
+            <div style="height: 240px;">
+              <canvas id="chartAkreditasi"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Terbaru: Pengajuan Bimbingan</div>
+      <ul class="list-group list-group-flush">
+        {% for x in recent_pengajuan %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold small">{{ x.mahasiswa.nama }}</div>
+              <div class="text-muted small">{{ x.get_jenis_display }}</div>
+            </div>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'dosen:bimbingan_detail' x.pk %}">Buka</a>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">Belum ada data.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Terbaru: Submission</div>
+      <ul class="list-group list-group-flush">
+        {% for x in recent_submission %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold small">{{ x.mahasiswa.nama }}</div>
+              <div class="text-muted small">{{ x.luaran.judul }}</div>
+            </div>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'dosen:submission_detail' x.pk %}">Buka</a>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">Belum ada data.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Terbaru: Dokumen Akreditasi</div>
+      <ul class="list-group list-group-flush">
+        {% for x in recent_akreditasi %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold small">{{ x.judul }}</div>
+              <div class="text-muted small">{{ x.get_kategori_display }} • {{ x.tahun }}-{{ x.semester }}</div>
+            </div>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'dosen:akreditasi_detail' x.pk %}">Buka</a>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">Belum ada data.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  (function () {
+    const themeColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--theme-color')
+      .trim() || '#2563EB';
+
+    const stats = {
+      pengajuan: parseInt("{{ count_pengajuan|default:0 }}", 10) || 0,
+      pengajuan_open: parseInt("{{ count_pengajuan_open|default:0 }}", 10) || 0,
+      catatan: parseInt("{{ count_catatan|default:0 }}", 10) || 0,
+      luaran: parseInt("{{ count_luaran|default:0 }}", 10) || 0,
+      submission: parseInt("{{ count_submission|default:0 }}", 10) || 0,
+      akreditasi: parseInt("{{ count_akreditasi|default:0 }}", 10) || 0,
+      akreditasi_submitted: parseInt("{{ count_akreditasi_submitted|default:0 }}", 10) || 0
+    };
+
+    const elSummary = document.getElementById('chartSummary');
+    if (elSummary) {
+      new Chart(elSummary, {
+        type: 'bar',
+        data: {
+          labels: ['Pengajuan', 'Catatan', 'Luaran', 'Submission', 'Akreditasi'],
+          datasets: [{
+            label: 'Jumlah',
+            data: [stats.pengajuan, stats.catatan, stats.luaran, stats.submission, stats.akreditasi],
+            backgroundColor: themeColor
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0 } }
+          }
+        }
+      });
+    }
+
+    const elPengajuan = document.getElementById('chartPengajuan');
+    if (elPengajuan) {
+      const open = stats.pengajuan_open;
+      const other = Math.max(stats.pengajuan - open, 0);
+      new Chart(elPengajuan, {
+        type: 'doughnut',
+        data: {
+          labels: ['Open', 'Lainnya'],
+          datasets: [{ data: [open, other] }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    const elAkreditasi = document.getElementById('chartAkreditasi');
+    if (elAkreditasi) {
+      const submitted = stats.akreditasi_submitted;
+      const other = Math.max(stats.akreditasi - submitted, 0);
+      new Chart(elAkreditasi, {
+        type: 'doughnut',
+        data: {
+          labels: ['Diajukan', 'Lainnya'],
+          datasets: [{ data: [submitted, other] }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+  })();
+</script>
+{% endblock %}

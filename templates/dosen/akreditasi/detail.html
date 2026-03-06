@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h4 class="mb-1">{{ object.judul }}</h4>
+    <div class="text-muted">
+      {{ object.get_kategori_display }} • {{ object.tahun }}-{{ object.semester }} • Status:
+      <span class="badge bg-secondary">{{ object.get_status_display }}</span>
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{% url 'dosen:akreditasi_list' %}">Kembali</a>
+
+    {% if IS_VERIFIKATOR or IS_OPERATOR %}
+      <a class="btn btn-outline-primary" href="{% url 'dosen:akreditasi_review' object.pk %}">
+        <i class="bi bi-shield-check me-1"></i>Verifikasi
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Metadata</div>
+      <div class="mb-2"><span class="text-muted">Dosen:</span> {{ object.dosen.nama }}</div>
+      <div class="mb-2"><span class="text-muted">Jenis Bukti:</span> {{ object.jenis_bukti }}</div>
+      <div class="mb-2"><span class="text-muted">Kode Standar:</span> {{ object.kode_standar|default:"-" }}</div>
+      <div class="mb-2"><span class="text-muted">Kata Kunci:</span> {{ object.kata_kunci|default:"-" }}</div>
+      <div class="mb-2"><span class="text-muted">Checksum:</span> <code>{{ object.file_checksum|default:"-" }}</code></div>
+      {% if object.tautan %}
+        <div class="mb-2"><span class="text-muted">Tautan:</span> <a href="{{ object.tautan }}" target="_blank">{{ object.tautan }}</a></div>
+      {% endif %}
+      <hr>
+      <a class="btn btn-primary w-100" href="{{ object.file_bukti.url }}" target="_blank">
+        <i class="bi bi-file-earmark-text me-1"></i>Buka File Bukti
+      </a>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Deskripsi</div>
+      <div>{{ object.deskripsi|linebreaks|default:"-" }}</div>
+      {% if object.rejected_reason %}
+      <div class="alert alert-warning mt-3 mb-0">
+        <div class="fw-semibold">Catatan Penolakan</div>
+        {{ object.rejected_reason|linebreaks }}
+      </div>
+      {% endif %}
+      <div class="text-muted small mt-3">
+        Diajukan: {{ object.submitted_at|date:"d M Y H:i"|default:"-" }} oleh {{ object.submitted_by|default:"-" }}
+        <br>
+        Diverifikasi: {{ object.verified_at|date:"d M Y H:i"|default:"-" }} oleh {{ object.verified_by|default:"-" }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

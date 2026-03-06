@@ -1,0 +1,53 @@
+:root {
+  --theme: var(--theme-color, #2563EB);
+}
+
+.navbar,
+.btn-primary {
+  background-color: var(--theme) !important;
+}
+
+.badge-theme {
+  background-color: var(--theme) !important;
+  color: #fff !important;
+}
+
+.sidebar a.active {
+  background: rgba(0,0,0,.06);
+  border-radius: .5rem;
+  font-weight: 600;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #344054;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+.brand-box {
+  margin-bottom: 1rem;
+}
+
+.brand-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.brand-desc {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+.brand-meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  line-height: 1.55;
+  word-break: break-word;
+}

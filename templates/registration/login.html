@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-4">
+    <div class="card p-4">
+      <div class="mb-3">
+        <h4 class="mb-1 fw-semibold">Login</h4>
+        <div class="text-muted">Gunakan akun yang sudah dibuat admin.</div>
+      </div>
+
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          Username atau password salah, silakan coba lagi.
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="{{ form.username.id_for_label }}" class="form-label">Nama pengguna</label>
+          <input
+            type="text"
+            name="{{ form.username.html_name }}"
+            id="{{ form.username.id_for_label }}"
+            value="{{ form.username.value|default_if_none:'' }}"
+            class="form-control form-control-lg"
+            placeholder="Masukkan username"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.password.id_for_label }}" class="form-label">Sandi</label>
+          <div class="input-group input-group-lg">
+            <input
+              type="password"
+              name="{{ form.password.html_name }}"
+              id="{{ form.password.id_for_label }}"
+              class="form-control"
+              placeholder="Masukkan password"
+              autocomplete="current-password"
+              required
+            >
+            <button class="btn btn-outline-secondary" type="button" id="togglePass" aria-label="Tampilkan password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100" type="submit">
+          Masuk
+        </button>
+      </form>
+
+      <div class="text-muted small mt-3">
+        Jika belum punya akun, minta admin membuatkan akun dan profil (Dosen/Mahasiswa).
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const btn = document.getElementById("togglePass");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      const input = document.getElementById("id_password");
+      if (!input) return;
+      const isPw = input.type === "password";
+      input.type = isPw ? "text" : "password";
+      this.innerHTML = isPw ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+    });
+  })();
+</script>
+{% endblock %}
