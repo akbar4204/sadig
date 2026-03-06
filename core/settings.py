@@ -20,7 +20,7 @@ load_env_file(BASE_DIR / ".env")
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-this-before-production")
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
-ALLOWED_HOSTS = [h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",") if h.strip()]
 
 SITE_NAME = os.environ.get("SITE_NAME", "SADIG")
 ORGANIZATION_NAME = os.environ.get("ORGANIZATION_NAME", "Sistem Aktivitas Dosen Digital")
