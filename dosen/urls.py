@@ -8,6 +8,7 @@ urlpatterns = [
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("profil/", views.profil_saya, name="profil_saya"),
     path("ganti-password-awal/", views.force_change_password, name="force_change_password"),
+    path("logout/", views.logout_view, name="logout_view"),
 
     # 1) Bimbingan
     path("bimbingan/", views.PengajuanBimbinganListView.as_view(), name="bimbingan_list"),
