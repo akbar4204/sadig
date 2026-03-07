@@ -41,32 +41,23 @@
       </button>
 
       <div class="collapse navbar-collapse" id="topnav">
-  <ul class="navbar-nav ms-auto align-items-lg-center">
-    {% if user.is_authenticated %}
-      <li class="nav-item">
-        <span class="nav-link">Hi, {{ user.username }}</span>
-      </li>
-      <li class="nav-item">
-        <form method="post" action="{% url 'logout' %}" class="d-inline mb-0">
-          {% csrf_token %}
-          <button
-            type="submit"
-            class="btn btn-link nav-link text-decoration-none border-0 bg-transparent p-0"
-            style="display:inline; cursor:pointer;"
-          >
-            Logout
-          </button>
-        </form>
-      </li>
-    {% else %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'login' %}">Login</a>
-      </li>
-    {% endif %}
-  </ul>
-</div>
-</div>
-</nav>
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <span class="nav-link">Hi, {{ user.username }}</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dosen:logout_view' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <div class="container-fluid">
     <div class="row">
