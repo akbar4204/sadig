@@ -197,15 +197,17 @@ class PengajuanBimbinganCreateView(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy("login")
 
     def dispatch(self, request, *args, **kwargs):
-        if not (_is_mahasiswa(request.user) or is_operator(request.user) or request.user.is_superuser):
+        if not request.user.has_perm("dosen.add_pengajuanbimbingan"):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.dibuat_oleh = self.request.user
+
         if _is_mahasiswa(self.request.user):
             self.object.mahasiswa = self.request.user.profil_mahasiswa
+
         self.object.save()
         messages.success(self.request, "Pengajuan bimbingan berhasil dibuat.")
         return redirect(self.get_success_url())
