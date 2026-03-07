@@ -7,7 +7,7 @@
   </div>
 
   {# Mahasiswa/Operator boleh membuat pengajuan #}
-  {% if IS_MAHASISWA or IS_OPERATOR %}
+  {% if perms.dosen.add_pengajuanbimbingan %}
     <a class="btn btn-primary" href="{% url 'dosen:bimbingan_create' %}">
       <i class="bi bi-plus-lg me-1"></i>Tambah
     </a>
